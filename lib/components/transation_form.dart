@@ -53,7 +53,7 @@ class _TransationFormState extends State<TransationForm> {
             padding: const EdgeInsets.all(10),
             child: TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.purple,
+                foregroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () => _submitform(),
               child: const Text('Nova Transação'),
