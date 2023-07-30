@@ -1,3 +1,4 @@
+import 'package:expenses/components/chart_bar.dart';
 import 'package:expenses/models/transation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,46 +9,61 @@ class Chart extends StatelessWidget {
   const Chart({required recentTransations, super.key})
       : _recentTransations = recentTransations;
 
-  _calculeteTotalBy(DateTime weekDay) {
-    var total = 0.0;
-
-    var transationValues = _recentTransations
-        .where((tr) => tr.date.day == weekDay.day)
-        .where((tr) => tr.date.month == weekDay.month)
-        .where((tr) => tr.date.year == weekDay.year)
-        .map((tr) => tr.value);
-
-    if (transationValues.isNotEmpty) {
-      total = transationValues.reduce((a, b) => a + b);
-    }
-
-    return total;
-  }
+  _calculeteTotalBy(DateTime weekDay) => _recentTransations
+      .where((tr) => tr.date.day == weekDay.day)
+      .where((tr) => tr.date.month == weekDay.month)
+      .where((tr) => tr.date.year == weekDay.year)
+      .map((tr) => tr.value)
+      .fold(0.0, (a, b) => a + b);
 
   List<Map<String, Object>> get groupedTransation {
     return List.generate(7, (index) {
       final weekDay = DateTime.now().subtract(Duration(days: index));
 
-      //DateFormat.E().format(weekDay).substring(0, 1);
+      var firstCharOfWeekDay = DateFormat.E().format(weekDay).substring(0, 1);
 
       final total = _calculeteTotalBy(weekDay);
 
-      print(DateFormat.E().format(weekDay).substring(0, 1) +
-          "=" +
-          total.toString());
-
-      return {'day': 'T', 'value': 9.99};
+      return {'day': firstCharOfWeekDay, 'value': total};
     });
   }
 
+  double _calculatePercentageOfWeekDay(double value) {
+    if (value <= 0) {
+      return 0.0;
+    }
+    return value / _weekTotalValue;
+  }
+
+  double get _weekTotalValue =>
+      groupedTransation.fold(0.0, (sum, tr) => sum + (tr['value'] as double));
+
   @override
   Widget build(BuildContext context) {
-    groupedTransation;
     return Card(
       elevation: 6,
-      margin: EdgeInsets.all(20),
-      child: Row(
-        children: [],
+      margin: const EdgeInsets.all(20),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupedTransation.isNotEmpty
+              ? groupedTransation.reversed.map(
+                  (tr) {
+                    var value = tr['value'] as double;
+
+                    return Flexible(
+                      fit: FlexFit.tight,
+                      child: ChartBar(
+                        label: tr['day'].toString(),
+                        value: value,
+                        percetage: _calculatePercentageOfWeekDay(value),
+                      ),
+                    );
+                  },
+                ).toList()
+              : List.empty(),
+        ),
       ),
     );
   }

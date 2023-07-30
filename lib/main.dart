@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transation_form.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +42,11 @@ class ExpensesApp extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.purple,
+          foregroundColor: Colors.white,
+        )),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -65,24 +68,36 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Transation> _transations = [
-    // Transation(
-    //   id: 't0',
-    //   title: 'conta antiga',
-    //   value: 14,
-    //   date: DateTime.now().subtract(const Duration(days: 33)),
-    // ),
-    // Transation(
-    //   id: 't1',
-    //   title: 'novo tenis de corrida',
-    //   value: 310.76,
-    //   date: DateTime.now().subtract(const Duration(days: 3)),
-    // ),
-    // Transation(
-    //   id: 't2',
-    //   title: 'conta de luz',
-    //   value: 211.30,
-    //   date: DateTime.now().subtract(const Duration(days: 4)),
-    // ),
+    Transation(
+      id: 't0',
+      title: 'conta antiga',
+      value: 14,
+      date: DateTime.now().subtract(const Duration(days: 33)),
+    ),
+    Transation(
+      id: 't1',
+      title: 'novo tenis de corrida',
+      value: 310.76,
+      date: DateTime.now().subtract(const Duration(days: 3)),
+    ),
+    Transation(
+      id: 't2',
+      title: 'conta de luz',
+      value: 211.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transation(
+      id: 't3',
+      title: 'carto de credito',
+      value: 1000,
+      date: DateTime.now(),
+    ),
+    Transation(
+      id: 't4',
+      title: 'lanche',
+      value: 11.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
   ];
 
   List<Transation> get _recentTransations {
@@ -122,6 +137,12 @@ class _HomePageState extends State<HomePage> {
     return _transations.map((tr) => tr.value).reduce((a, b) => a + b);
   }
 
+  _deleteExpense(int index) {
+    setState(() {
+      _transations.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +160,10 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(recentTransations: _recentTransations),
-            TransationList(transations: _transations),
+            TransationList(
+              transations: _transations,
+              onDelete: _deleteExpense,
+            ),
             TransationAmount(value: _calculeteAmount()),
           ],
         ),
