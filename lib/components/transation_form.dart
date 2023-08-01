@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class TransationForm extends StatefulWidget {
-  final void Function(String title, double value) _onSubmit;
+  final void Function(String title, double value, DateTime dateTime) _onSubmit;
 
   const TransationForm({required onSubmit, super.key}) : _onSubmit = onSubmit;
 
@@ -12,6 +14,7 @@ class TransationForm extends StatefulWidget {
 class _TransationFormState extends State<TransationForm> {
   final TextEditingController _titleControler = TextEditingController();
   final TextEditingController _valueControler = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
 
   _submitform() {
     final title = _titleControler.text;
@@ -21,10 +24,22 @@ class _TransationFormState extends State<TransationForm> {
       return;
     }
 
-    widget._onSubmit(
-      title,
-      value,
-    );
+    widget._onSubmit(title, value, _selectedDate);
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          _selectedDate = value;
+        });
+      }
+    });
   }
 
   @override
@@ -43,6 +58,7 @@ class _TransationFormState extends State<TransationForm> {
           ),
           TextField(
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onSubmitted: (_) => _submitform(),
             controller: _valueControler,
             decoration: const InputDecoration(
@@ -53,9 +69,12 @@ class _TransationFormState extends State<TransationForm> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const Text('Nenhuma data selecionada!'),
+                Expanded(
+                  child: Text(
+                      'Data selecinada: ${DateFormat('dd/MM/y').format(_selectedDate)}'),
+                ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: _showDatePicker,
                   style: TextButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.primary,
                   ),
@@ -70,10 +89,6 @@ class _TransationFormState extends State<TransationForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  // style: ElevatedButton.styleFrom(
-                  //   foregroundColor: Theme.of(context).buttonTheme.colorScheme.
-                  //   backgroundColor: Theme.of(context).colorScheme.primary,
-                  // ),
                   onPressed: () => _submitform(),
                   child: const Text('Nova Transação'),
                 ),

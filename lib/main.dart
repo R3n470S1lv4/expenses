@@ -43,10 +43,11 @@ class ExpensesApp extends StatelessWidget {
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.purple,
-          foregroundColor: Colors.white,
-        )),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purple,
+            foregroundColor: Colors.white,
+          ),
+        ),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -68,36 +69,36 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Transation> _transations = [
-    Transation(
-      id: 't0',
-      title: 'conta antiga',
-      value: 14,
-      date: DateTime.now().subtract(const Duration(days: 33)),
-    ),
-    Transation(
-      id: 't1',
-      title: 'novo tenis de corrida',
-      value: 310.76,
-      date: DateTime.now().subtract(const Duration(days: 3)),
-    ),
-    Transation(
-      id: 't2',
-      title: 'conta de luz',
-      value: 211.30,
-      date: DateTime.now().subtract(const Duration(days: 4)),
-    ),
-    Transation(
-      id: 't3',
-      title: 'carto de credito',
-      value: 1000,
-      date: DateTime.now(),
-    ),
-    Transation(
-      id: 't4',
-      title: 'lanche',
-      value: 11.30,
-      date: DateTime.now().subtract(const Duration(days: 4)),
-    ),
+    // Transation(
+    //   id: 't0',
+    //   title: 'conta antiga',
+    //   value: 14,
+    //   date: DateTime.now().subtract(const Duration(days: 33)),
+    // ),
+    // Transation(
+    //   id: 't1',
+    //   title: 'novo tenis de corrida',
+    //   value: 310.76,
+    //   date: DateTime.now().subtract(const Duration(days: 3)),
+    // ),
+    // Transation(
+    //   id: 't2',
+    //   title: 'conta de luz',
+    //   value: 211.30,
+    //   date: DateTime.now().subtract(const Duration(days: 4)),
+    // ),
+    // Transation(
+    //   id: 't3',
+    //   title: 'carto de credito',
+    //   value: 1000,
+    //   date: DateTime.now(),
+    // ),
+    // Transation(
+    //   id: 't4',
+    //   title: 'lanche',
+    //   value: 11.30,
+    //   date: DateTime.now().subtract(const Duration(days: 4)),
+    // ),
   ];
 
   List<Transation> get _recentTransations {
@@ -107,12 +108,12 @@ class _HomePageState extends State<HomePage> {
         .toList();
   }
 
-  _addTransation(String title, double value) {
+  _addTransation(String title, double value, DateTime dateTime) {
     final transasion = Transation(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.now(),
+      date: dateTime,
     );
 
     setState(() {
@@ -137,9 +138,9 @@ class _HomePageState extends State<HomePage> {
     return _transations.map((tr) => tr.value).reduce((a, b) => a + b);
   }
 
-  _deleteExpense(int index) {
+  _deleteTransation(String transationId) {
     setState(() {
-      _transations.removeAt(index);
+      _transations.removeWhere((tr) => tr.id == transationId);
     });
   }
 
@@ -162,7 +163,7 @@ class _HomePageState extends State<HomePage> {
             Chart(recentTransations: _recentTransations),
             TransationList(
               transations: _transations,
-              onDelete: _deleteExpense,
+              onDelete: _deleteTransation,
             ),
             TransationAmount(value: _calculeteAmount()),
           ],

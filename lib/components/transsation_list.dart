@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 
 class TransationList extends StatelessWidget {
   final List<Transation> _transations;
-  final void Function(int index) _onDelete;
+  final void Function(String transationId) _onDelete;
 
   const TransationList(
-      {required transations, required Function(int) onDelete, super.key})
+      {required transations, required Function(String) onDelete, super.key})
       : _transations = transations,
         _onDelete = onDelete;
 
-  Future<String?> _showDialog(BuildContext context, int index) {
+  Future<String?> _showDialog(BuildContext context, String transationId) {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -24,7 +24,7 @@ class TransationList extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              _onDelete(index);
+              _onDelete(transationId);
               Navigator.pop(context, 'Sim');
             },
             child: const Text('Sim'),
@@ -37,7 +37,7 @@ class TransationList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 650,
       child: _transations.isEmpty
           ? Column(
               children: [
@@ -75,9 +75,10 @@ class TransationList extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     subtitle: Text(DateFormat('d MMM y').format(tr.date)),
-                    trailing: TextButton(
-                      onPressed: () => _showDialog(context, index),
-                      child: const Icon(Icons.delete),
+                    trailing: IconButton(
+                      onPressed: () => _showDialog(context, tr.id),
+                      icon: const Icon(Icons.delete),
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                 );
