@@ -8,13 +8,16 @@ class TransationAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
-          "Total ${_value.toStringAsFixed(2)}",
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text(
+            "Total: ${_value.toStringAsFixed(2)}",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

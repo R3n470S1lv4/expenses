@@ -69,36 +69,54 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Transation> _transations = [
-    // Transation(
-    //   id: 't0',
-    //   title: 'conta antiga',
-    //   value: 14,
-    //   date: DateTime.now().subtract(const Duration(days: 33)),
-    // ),
-    // Transation(
-    //   id: 't1',
-    //   title: 'novo tenis de corrida',
-    //   value: 310.76,
-    //   date: DateTime.now().subtract(const Duration(days: 3)),
-    // ),
-    // Transation(
-    //   id: 't2',
-    //   title: 'conta de luz',
-    //   value: 211.30,
-    //   date: DateTime.now().subtract(const Duration(days: 4)),
-    // ),
-    // Transation(
-    //   id: 't3',
-    //   title: 'carto de credito',
-    //   value: 1000,
-    //   date: DateTime.now(),
-    // ),
-    // Transation(
-    //   id: 't4',
-    //   title: 'lanche',
-    //   value: 11.30,
-    //   date: DateTime.now().subtract(const Duration(days: 4)),
-    // ),
+    Transation(
+      id: 't0',
+      title: 'conta antiga',
+      value: 14,
+      date: DateTime.now().subtract(const Duration(days: 33)),
+    ),
+    Transation(
+      id: 't1',
+      title: 'novo tenis de corrida',
+      value: 310.76,
+      date: DateTime.now().subtract(const Duration(days: 3)),
+    ),
+    Transation(
+      id: 't2',
+      title: 'conta de luz',
+      value: 211.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transation(
+      id: 't3',
+      title: 'carto de credito',
+      value: 1000,
+      date: DateTime.now(),
+    ),
+    Transation(
+      id: 't4',
+      title: 'lanche 1',
+      value: 11.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transation(
+      id: 't5',
+      title: 'lanche 2',
+      value: 11.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transation(
+      id: 't6',
+      title: 'lanche 3',
+      value: 11.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transation(
+      id: 't7',
+      title: 'lanche 4',
+      value: 11.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
   ];
 
   List<Transation> get _recentTransations {
@@ -146,26 +164,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text("Despesas Pessoais"),
+      actions: [
+        IconButton(
+          onPressed: () => _openTransationFormModal(context),
+          icon: const Icon(Icons.add),
+        ),
+      ],
+    );
+
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Despesas Pessoais"),
-        actions: [
-          IconButton(
-            onPressed: () => _openTransationFormModal(context),
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Chart(recentTransations: _recentTransations),
-            TransationList(
-              transations: _transations,
-              onDelete: _deleteTransation,
+            SizedBox(
+              height: availableHeight * 0.3,
+              child: Chart(recentTransations: _recentTransations),
             ),
-            TransationAmount(value: _calculeteAmount()),
+            SizedBox(
+              height: availableHeight * 0.6,
+              child: TransationList(
+                transations: _transations,
+                onDelete: _deleteTransation,
+              ),
+            ),
+            SizedBox(
+              height: availableHeight * 0.1,
+              child: TransationAmount(value: _calculeteAmount()),
+            ),
           ],
         ),
       ),
