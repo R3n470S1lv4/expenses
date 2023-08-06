@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:expenses/components/transsation_list.dart';
 import 'package:expenses/models/transation.dart';
 import 'package:expenses/components/transation_amount.dart';
+import 'package:flutter/services.dart';
 
 main() => runApp(const ExpensesApp());
 
@@ -13,6 +14,10 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    // ]);
+
     final ThemeData theme = ThemeData();
 
     return MaterialApp(
@@ -68,6 +73,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _showChart = false;
   final List<Transation> _transations = [
     Transation(
       id: 't0',
@@ -165,7 +171,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
-      title: const Text("Despesas Pessoais"),
+      title: const Text(
+        "Despesas Pessoais",
+      ),
       actions: [
         IconButton(
           onPressed: () => _openTransationFormModal(context),
@@ -184,21 +192,33 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: availableHeight * 0.3,
-              child: Chart(recentTransations: _recentTransations),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Exibir Gráfico'),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            SizedBox(
-              height: availableHeight * 0.6,
-              child: TransationList(
-                transations: _transations,
-                onDelete: _deleteTransation,
+            if (_showChart)
+              SizedBox(
+                height: availableHeight * 0.25,
+                child: Chart(recentTransations: _recentTransations),
               ),
-            ),
-            SizedBox(
-              height: availableHeight * 0.1,
-              child: TransationAmount(value: _calculeteAmount()),
-            ),
+            if (!_showChart)
+              SizedBox(
+                height: availableHeight * 0.70,
+                child: TransationList(
+                  transations: _transations,
+                  onDelete: _deleteTransation,
+                ),
+              ),
           ],
         ),
       ),
@@ -207,6 +227,18 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomSheet: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            height: availableHeight * 0.05,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 4, 0),
+              child: TransationAmount(value: _calculeteAmount()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

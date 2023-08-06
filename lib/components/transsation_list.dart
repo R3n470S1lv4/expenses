@@ -37,19 +37,31 @@ class TransationList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _transations.isEmpty
-        ? Column(
-            children: [
-              Text("Nenhuma transação cadastrada!",
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 20),
-              SizedBox(
-                height: 200,
-                child: Image.asset(
-                  "assets/images/waiting.png",
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
+        ? LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: constraints.maxHeight * 0.05,
+                  ),
+                  SizedBox(
+                    height: constraints.maxHeight * 0.3,
+                    child: Text("Nenhuma transação cadastrada!",
+                        style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  SizedBox(
+                    height: constraints.maxHeight * 0.05,
+                  ),
+                  SizedBox(
+                    height: constraints.maxHeight * 0.6,
+                    child: Image.asset(
+                      "assets/images/waiting.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              );
+            },
           )
         : ListView.builder(
             itemCount: _transations.length,
@@ -63,7 +75,7 @@ class TransationList extends StatelessWidget {
                   leading: CircleAvatar(
                     radius: 30,
                     child: Padding(
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(8),
                       child: FittedBox(child: Text("R\$${tr.value}")),
                     ),
                   ),
