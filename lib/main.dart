@@ -170,11 +170,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var isLandscape = mediaQuery.orientation == Orientation.landscape;
+
     final appBar = AppBar(
       title: const Text(
         "Despesas Pessoais",
       ),
       actions: [
+        if (isLandscape)
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+            icon: Icon(_showChart ? Icons.list : Icons.show_chart),
+          ),
         IconButton(
           onPressed: () => _openTransationFormModal(context),
           icon: const Icon(Icons.add),
@@ -182,9 +194,9 @@ class _HomePageState extends State<HomePage> {
       ],
     );
 
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
     return Scaffold(
       appBar: appBar,
@@ -192,28 +204,14 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Exibir Gráfico'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            if (_showChart)
+            if (_showChart || !isLandscape)
               SizedBox(
-                height: availableHeight * 0.25,
+                height: availableHeight * (isLandscape ? 0.8 : 0.25),
                 child: Chart(recentTransations: _recentTransations),
               ),
-            if (!_showChart)
+            if (!_showChart || !isLandscape)
               SizedBox(
-                height: availableHeight * 0.70,
+                height: availableHeight * (isLandscape ? 1 : 0.7),
                 child: TransationList(
                   transations: _transations,
                   onDelete: _deleteTransation,

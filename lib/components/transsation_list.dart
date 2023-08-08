@@ -42,15 +42,12 @@ class TransationList extends StatelessWidget {
               return Column(
                 children: [
                   SizedBox(
-                    height: constraints.maxHeight * 0.05,
+                    height: 20,
                   ),
+                  Text("Nenhuma transação cadastrada!",
+                      style: Theme.of(context).textTheme.titleMedium),
                   SizedBox(
-                    height: constraints.maxHeight * 0.3,
-                    child: Text("Nenhuma transação cadastrada!",
-                        style: Theme.of(context).textTheme.titleMedium),
-                  ),
-                  SizedBox(
-                    height: constraints.maxHeight * 0.05,
+                    height: 20,
                   ),
                   SizedBox(
                     height: constraints.maxHeight * 0.6,
@@ -84,11 +81,21 @@ class TransationList extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(DateFormat('d MMM y').format(tr.date)),
-                  trailing: IconButton(
-                    onPressed: () => _showDialog(context, tr.id),
-                    icon: const Icon(Icons.delete),
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                  trailing: MediaQuery.of(context).size.width > 480
+                      ? TextButton.icon(
+                          onPressed: () => _showDialog(context, tr.id),
+                          icon: const Icon(Icons.delete),
+                          label: const Text("Delete"),
+                          style: TextButton.styleFrom(
+                            foregroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        )
+                      : IconButton(
+                          onPressed: () => _showDialog(context, tr.id),
+                          icon: const Icon(Icons.delete),
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                 ),
               );
             },
